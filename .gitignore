@@ -1,2 +1,49 @@
-/frontend/node_modules
-/backend/node_modules
+# =========================
+# Backend / Node
+# =========================
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/.env*
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/pnpm-debug.log*
+backend/package-lock.json
+backend/yarn.lock
+backend/.vscode/
+backend/coverage/
+backend/tmp/
+backend/temp/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+backend/lerna-debug.log*
+
+# =========================
+# Frontend / Vite + React
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.vscode/
+frontend/.env*
+
+# Tailwind / PostCSS configs (track them)
+# frontend/tailwind.config.js
+# frontend/postcss.config.js
+
+# IDE / OS
+frontend/.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+out/
+.DS_Store
+Thumbs.db
