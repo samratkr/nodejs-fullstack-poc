@@ -9,7 +9,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (token && !user) dispatch(fetchMe(token));
-  }, []);
+  }, [token, user, dispatch]);
 
   const containerStyle: React.CSSProperties = {
     height: "100vh",

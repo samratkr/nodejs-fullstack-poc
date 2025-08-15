@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import type { RootState, AppDispatch } from "../redux/store";
-import { logout, updateUser } from "../redux/reducers/authReducer";
+import { fetchMe, logout, updateUser } from "../redux/reducers/authReducer";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api`; // replace with your backend URL
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, token } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (token && !user) dispatch(fetchMe(token));
+  }, [token, user, dispatch]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
