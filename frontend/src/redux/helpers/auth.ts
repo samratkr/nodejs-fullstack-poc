@@ -2,7 +2,7 @@ import axios from "axios";
 import type { UpdateUserPayload, User } from "../../types/User";
 import { store } from "../store";
 
-const API_URL = import.meta.env.VITE_API_URL || `${process.env.VITE_API_URL}`;
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const registerUser = async (data: { name: string; email: string; password: string; age: number }) => {
   const response = await axios.post(`${API_URL}/api/auth/signup`, data);

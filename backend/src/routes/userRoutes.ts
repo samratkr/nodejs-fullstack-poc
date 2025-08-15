@@ -49,14 +49,16 @@ router.get(
 
     // Send token to popup's opener window
     res.send(`
-      <script>
-        window.opener.postMessage(
-          { token: "${token}", user: { id: "${user.id}", name: "${user.name}", email: "${user.email}" } },
-          `${process.env.FRONTEND_URL}`
-        );
-        window.close();
-      </script>
-    `);
+  <script>
+    const userData = {
+      token: ${JSON.stringify(token)},
+      user: ${JSON.stringify({ id: user.id, name: user.name, email: user.email })}
+    };
+
+    window.opener.postMessage(userData, "${process.env.FRONTEND_URL}");
+    window.close();
+  </script>
+`);
   }
 );
 

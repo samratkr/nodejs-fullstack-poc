@@ -31,14 +31,14 @@ const Login: React.FC = () => {
     try {
       // await dispatch(googleLogin()).unwrap();
       const popup = window.open(
-        `${process.env.VITE_API_URL}/api/auth/google`,
+        `${import.meta.env.VITE_API_URL}/api/auth/google`,
         "_blank",
         "width=500,height=600"
       );
 
       const messageListener = (event: MessageEvent) => {
         // Make sure the message comes from your backend
-        if (event.origin !== `${process.env.VITE_API_URL}`) return;
+        if (event.origin !== `${import.meta.env.VITE_API_URL}`) return;
 
         const { token, user } = event.data;
         if (token && user) {
@@ -211,4 +211,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
