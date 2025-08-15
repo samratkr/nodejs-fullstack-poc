@@ -35,9 +35,9 @@ const Profile: React.FC = () => {
 
   const handleEditClick = () => {
     setFormData({
-      name: user.name,
-      email: user.email,
-      age: user.age || "",
+      name: user?.name,
+      email: user?.email,
+      age: user?.age || "",
     });
     setIsEditing(true);
   };
@@ -45,9 +45,9 @@ const Profile: React.FC = () => {
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name,
-        email: user.email,
-        age: user.age || "",
+        name: user?.name,
+        email: user?.email,
+        age: user?.age || "",
       });
     }
   }, [user]);
@@ -184,14 +184,14 @@ const Profile: React.FC = () => {
                   color: "#333",
                 }}
               >
-                {user.name}
+                {user?.name}
               </h1>
               <p style={{ margin: "6px 0" }}>
                 <strong>Email:</strong> {user?.email || "Not available"}
               </p>
-              {user.age && (
+              {user?.age && (
                 <p style={{ margin: "6px 0" }}>
-                  <strong>Age:</strong> {user.age}
+                  <strong>Age:</strong> {user?.age}
                 </p>
               )}
             </div>
