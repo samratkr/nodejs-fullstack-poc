@@ -32,24 +32,41 @@ const Login: React.FC = () => {
       "width=500,height=600"
     );
 
+    if (!popup) {
+      alert("Popup blocked. Please allow popups for this site.");
+      return;
+    }
+
+    // Listen for messages from the popup
     const messageListener = (event: MessageEvent) => {
       if (event.origin !== import.meta.env.VITE_API_URL) return;
 
       const { token, user } = event.data;
       if (token && user) {
-        dispatch(setUser({ token }));
-        dispatch(fetchMe(token));
-        navigate("/profile");
+        // Save user info
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-        window.location.reload();
+
+        // Update redux state
+        dispatch(setUser({ token }));
+        dispatch(fetchMe(token));
+
+        // Navigate to profile
+        navigate("/profile");
+
+        // Close popup
+        popup.close();
+
+        // Remove listener
+        window.removeEventListener("message", messageListener);
       }
     };
 
     window.addEventListener("message", messageListener);
 
+    // If popup is closed manually, remove listener
     const popupChecker = setInterval(() => {
-      if (!popup || popup.closed) {
+      if (popup.closed) {
         clearInterval(popupChecker);
         window.removeEventListener("message", messageListener);
       }

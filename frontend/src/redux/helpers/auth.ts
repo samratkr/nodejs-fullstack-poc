@@ -40,7 +40,6 @@ export const fetchMyData = async (token: string): Promise<User> => {
   const response = await axios.get(`${API_URL}/api/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  console.log("responseResponse", response)
   return response.data;
 };
 
