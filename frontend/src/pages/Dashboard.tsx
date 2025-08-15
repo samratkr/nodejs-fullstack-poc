@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
   }, [token, user, dispatch]);
 
   const containerStyle: React.CSSProperties = {
-    height: "100vh",
+    height: "80vh",
     width: "96vw",
     display: "flex",
     justifyContent: "center",

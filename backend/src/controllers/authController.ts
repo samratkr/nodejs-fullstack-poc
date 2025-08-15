@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt, { compareSync } from "bcryptjs";
 import User from "../models/User";
 
 const generateToken = (userId: string) => {

@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
   return (
     <div
       style={{
-        height: "100vh",
+        height: "80vh",
         width: "96vw",
         display: "flex",
         flexDirection: "column",
