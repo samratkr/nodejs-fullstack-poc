@@ -18,39 +18,46 @@ interface FormData {
 const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, token } = useSelector((state: RootState) => state.auth);
+
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (token && !user) dispatch(fetchMe(token));
-  }, [token, user, dispatch]);
-
   const [showSuccess, setShowSuccess] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     age: "",
   });
-  if (!user) return <Loader />;
 
-  const handleEditClick = () => {
-    setFormData({
-      name: user?.name,
-      email: user?.email,
-      age: user?.age || "",
-    });
-    setIsEditing(true);
-  };
+  // Fetch user data if not already loaded
+  useEffect(() => {
+    if (token && !user) {
+      dispatch(fetchMe(token));
+    }
+  }, [token, user, dispatch]);
 
+  // Populate form when user is available
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user?.name,
-        email: user?.email,
+        name: user?.name || "",
+        email: user?.email || "",
         age: user?.age || "",
       });
     }
   }, [user]);
+
+  if (!user) return <Loader />;
+
+  const handleEditClick = () => {
+    setFormData({
+      name: user?.name || "",
+      email: user?.email || "",
+      age: user?.age || "",
+    });
+    setIsEditing(true);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,7 +67,10 @@ const Profile: React.FC = () => {
     setLoading(true);
     try {
       const resultAction = await dispatch(
-        updateUser({ id: user?._id ? user?._id : user?.id, payload: formData })
+        updateUser({
+          id: user?._id || user?.id || "",
+          payload: formData,
+        })
       );
 
       if (updateUser.fulfilled.match(resultAction)) {
@@ -69,7 +79,7 @@ const Profile: React.FC = () => {
       } else {
         console.error(
           "Update failed:",
-          resultAction.payload || resultAction.error.message
+          resultAction.payload || resultAction.error?.message
         );
       }
     } catch (err) {
@@ -79,12 +89,10 @@ const Profile: React.FC = () => {
     }
   };
 
-  const [deleteModal, setDeleteModal] = useState(false);
-
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await axios.delete(`${API_URL}/${user._id ? user?._id : user?.id}`, {
+      await axios.delete(`${API_URL}/${user?._id || user?.id || ""}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowSuccess(true);
@@ -184,7 +192,7 @@ const Profile: React.FC = () => {
                   color: "#333",
                 }}
               >
-                {user?.name}
+                {user?.name || "No Name"}
               </h1>
               <p style={{ margin: "6px 0" }}>
                 <strong>Email:</strong> {user?.email || "Not available"}
