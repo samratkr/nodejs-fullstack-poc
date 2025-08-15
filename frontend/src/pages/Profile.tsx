@@ -4,7 +4,7 @@ import axios from "axios";
 import type { RootState, AppDispatch } from "../redux/store";
 import { logout, updateUser } from "../redux/reducers/authReducer";
 
-const API_URL = "http://localhost:5000/api"; // replace with your backend URL
+const API_URL = `${process.env.VITE_API_URL}/api`; // replace with your backend URL
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -225,3 +225,4 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
+
