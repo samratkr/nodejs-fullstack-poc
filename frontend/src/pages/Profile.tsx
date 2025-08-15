@@ -15,6 +15,10 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (token && !user) dispatch(fetchMe(token));
+  }, [token, user, dispatch]);
+
+  useEffect(() => {
+    window.location.reload();
   }, []);
 
   const [showSuccess, setShowSuccess] = useState(false);
