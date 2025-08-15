@@ -25,39 +25,34 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const popup = window.open(
-        `${import.meta.env.VITE_API_URL}/api/auth/google`,
-        "_blank",
-        "width=500,height=600"
-      );
+  const handleGoogleLogin = () => {
+    const popup = window.open(
+      `${import.meta.env.VITE_API_URL}/api/auth/google`,
+      "_blank",
+      "width=500,height=600"
+    );
 
-      const messageListener = (event: MessageEvent) => {
-        if (event.origin !== `${import.meta.env.VITE_API_URL}`) return;
+    const messageListener = (event: MessageEvent) => {
+      if (event.origin !== import.meta.env.VITE_API_URL) return;
 
-        const { token, user } = event.data;
-        if (token && user) {
-          dispatch(setUser({ token }));
-          dispatch(fetchMe(token));
-          navigate("/profile");
-          localStorage.setItem("token", token);
-          localStorage.setItem("user", JSON.stringify(user));
-        }
-      };
+      const { token, user } = event.data;
+      if (token && user) {
+        dispatch(setUser({ token }));
+        dispatch(fetchMe(token));
+        navigate("/profile");
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+    };
 
-      window.addEventListener("message", messageListener);
+    window.addEventListener("message", messageListener);
 
-      const popupChecker = setInterval(() => {
-        if (popup?.closed) {
-          clearInterval(popupChecker);
-          window.removeEventListener("message", messageListener);
-        }
-      }, 500);
-    } catch (err) {
-      console.error(err);
-      alert("Google login failed");
-    }
+    const popupChecker = setInterval(() => {
+      if (!popup || popup.closed) {
+        clearInterval(popupChecker);
+        window.removeEventListener("message", messageListener);
+      }
+    }, 500);
   };
 
   return (
