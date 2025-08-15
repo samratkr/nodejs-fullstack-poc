@@ -10,11 +10,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import mongoose from "mongoose";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-// --------------------
-// MongoDB connection caching for serverless
-// --------------------
 declare global {
-  // eslint-disable-next-line no-var
   var mongoose: {
     conn: mongoose.Connection | null;
     promise: Promise<mongoose.Connection> | null;
@@ -34,9 +30,6 @@ async function cachedConnectDB(): Promise<mongoose.Connection> {
   return cached.conn;
 }
 
-// --------------------
-// Create Express app
-// --------------------
 const app = express();
 
 app.use(express.json());
@@ -56,16 +49,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
 app.get("/api", (req, res) => {
   res.send("API is running and connected to MongoDB!");
 });
 app.use("/api", userRoutes);
 app.use(errorHandler);
 
-// --------------------
-// Export handler for Vercel
-// --------------------
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   await cachedConnectDB();
   app(req, res);

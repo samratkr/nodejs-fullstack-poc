@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/User"; // ✅ make sure this matches your file name
+import User from "../models/User";
 
-// Extend Express Request type to include user
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
+      user?: User;
     }
   }
 }
@@ -26,7 +25,10 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
       token,
       process.env.JWT_SECRET as string
     ) as { id: string };
-    req.user = await User.findById(decoded.id).select("-password");
+
+    const user = await User.findById(decoded.id).select("-password");
+
+    req.user = user || undefined;
     if (!req.user) {
       return res.status(404).json({ message: "User not found" });
     }
