@@ -42,43 +42,42 @@ const Profile: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    setLoading(true);
-    try {
-      const resultAction = await dispatch(
-        updateUser({ id: user?._id ? user?._id : user?.id, payload: formData })
-      );
-
-      if (updateUser.fulfilled.match(resultAction)) {
-        setIsEditing(false);
-        setShowSuccess(true);
-      } else {
-        console.error(
-          "Update failed:",
-          resultAction.payload || resultAction.error.message
-        );
-      }
-    } catch (err) {
-      console.error("Unexpected error:", err);
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   const resultAction = await dispatch(
+    //     updateUser({ id: user?._id ? user?._id : user?.id, payload: formData })
+    //   );
+    //   if (updateUser.fulfilled.match(resultAction)) {
+    //     setIsEditing(false);
+    //     setShowSuccess(true);
+    //   } else {
+    //     console.error(
+    //       "Update failed:",
+    //       resultAction.payload || resultAction.error.message
+    //     );
+    //   }
+    // } catch (err) {
+    //   console.error("Unexpected error:", err);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const [deleteModal, setDeleteModal] = useState(false);
 
   const handleDelete = async () => {
-    setLoading(true);
-    try {
-      await axios.delete(`${API_URL}/${user._id ? user?._id : user?.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setShowSuccess(true);
-      dispatch(logout());
-    } catch (err: any) {
-      console.error("Delete failed:", err.response?.data || err.message);
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   await axios.delete(`${API_URL}/${user._id ? user?._id : user?.id}`, {
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   });
+    //   setShowSuccess(true);
+    //   dispatch(logout());
+    // } catch (err: any) {
+    //   console.error("Delete failed:", err.response?.data || err.message);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -95,7 +94,7 @@ const Profile: React.FC = () => {
         padding: "20px",
       }}
     >
-      {loading && <Loader />}
+      {/* {loading && <Loader />}
       {showSuccess && (
         <SuccessModal
           message="Saved Successfully"
@@ -111,7 +110,7 @@ const Profile: React.FC = () => {
             handleDelete();
           }}
         />
-      )}
+      )} */}
       <div
         style={{
           backgroundColor: "#fff",
