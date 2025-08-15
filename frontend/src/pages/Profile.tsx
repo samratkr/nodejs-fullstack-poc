@@ -7,7 +7,13 @@ import Loader from "../components/Loader";
 import SuccessModal from "../components/SuccessModal";
 import CustomModal from "../components/CustomModal";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/api`; // replace with your backend URL
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+
+interface FormData {
+  name: string;
+  email: string;
+  age: string | number;
+}
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,13 +26,13 @@ const Profile: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: user?.name || "",
     email: user?.email || "",
     age: user?.age || "",
   });
   console.log("UserSre", user);
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <Loader />;
 
   const handleEditClick = () => {
     setFormData({
@@ -36,6 +42,16 @@ const Profile: React.FC = () => {
     });
     setIsEditing(true);
   };
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name,
+        email: user.email,
+        age: user.age || "",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -80,10 +96,6 @@ const Profile: React.FC = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    window.location.reload();
-  }, [dispatch]);
 
   return (
     <div
