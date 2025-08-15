@@ -27,11 +27,10 @@ const Profile: React.FC = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    name: user?.name || "",
-    email: user?.email || "",
-    age: user?.age || "",
+    name: "",
+    email: "",
+    age: "",
   });
-  console.log("UserSre", user);
   if (!user) return <Loader />;
 
   const handleEditClick = () => {
@@ -188,7 +187,7 @@ const Profile: React.FC = () => {
                 {user.name}
               </h1>
               <p style={{ margin: "6px 0" }}>
-                <strong>Email:</strong> {user.email}
+                <strong>Email:</strong> {user?.email || "Not available"}
               </p>
               {user.age && (
                 <p style={{ margin: "6px 0" }}>
