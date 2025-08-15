@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import session from "express-session";
-import cors from "cors"; // <--- import cors
+import cors from "cors";
 import passport from "./config/passport";
 import { connectDB } from "./config/db";
 import userRoutes from "./routes/userRoutes";
@@ -11,10 +11,9 @@ import { errorHandler } from "./middlewares/errorHandler";
 const app = express();
 app.use(express.json());
 
-// --- Enable CORS ---
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_URL}`, // your Vite frontend
+    origin: `${process.env.FRONTEND_URL}`,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -35,7 +34,7 @@ app.use(passport.session());
     res.send("API is running and connected to MongoDB!");
   });
 
-  app.use("/api", userRoutes); // <--- your routes
+  app.use("/api", userRoutes);
   app.use(errorHandler);
 
   const PORT = process.env.PORT || 5000;
