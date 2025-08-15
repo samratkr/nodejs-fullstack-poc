@@ -52,7 +52,7 @@ router.get(
       <script>
         window.opener.postMessage(
           { token: "${token}", user: { id: "${user.id}", name: "${user.name}", email: "${user.email}" } },
-          "http://localhost:5173"
+          `${process.env.FRONTEND_URL}`
         );
         window.close();
       </script>
@@ -71,3 +71,4 @@ router.put("/:id", protect, updateUser);
 router.delete("/:id", protect, deleteUser);
 
 export default router; 
+
