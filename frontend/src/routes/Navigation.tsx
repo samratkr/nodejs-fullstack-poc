@@ -37,11 +37,11 @@ const Navigation: React.FC = () => {
         {/* Public Routes */}
         <Route
           path="/login"
-          element={token ? <Navigate to="/dashboard" replace /> : <Login />}
+          element={token ? <Navigate to="/profile" replace /> : <Login />}
         />
         <Route
           path="/signup"
-          element={token ? <Navigate to="/dashboard" replace /> : <SignUp />}
+          element={token ? <Navigate to="/profile" replace /> : <SignUp />}
         />
 
         {/* Protected Routes */}
