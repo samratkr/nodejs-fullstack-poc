@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login, setUser } from "../redux/reducers/authReducer";
 import type { AppDispatch } from "../redux/store";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
