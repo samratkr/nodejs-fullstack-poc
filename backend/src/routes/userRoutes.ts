@@ -57,7 +57,6 @@ router.get(
         };
         if (window.opener) {
           window.opener.postMessage(userData, "${process.env.FRONTEND_URL}");
-          window.opener.location.reload();
           window.close();
         }
       </script>

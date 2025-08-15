@@ -42,6 +42,7 @@ const Login: React.FC = () => {
         navigate("/profile");
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
+        window.location.reload();
       }
     };
 
