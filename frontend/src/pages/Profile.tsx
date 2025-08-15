@@ -17,10 +17,6 @@ const Profile: React.FC = () => {
     if (token && !user) dispatch(fetchMe(token));
   }, [token, user, dispatch]);
 
-  useEffect(() => {
-    window.location.reload();
-  }, []);
-
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -84,6 +80,10 @@ const Profile: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    window.location.reload();
+  }, [dispatch]);
 
   return (
     <div
