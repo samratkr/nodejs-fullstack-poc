@@ -26,7 +26,7 @@ const Profile: React.FC = () => {
     age: user?.age || "",
   });
   console.log("UserSre", user);
-  if (!user) return <Loader />;
+  if (!user) return <p>Loading...</p>;
 
   const handleEditClick = () => {
     setFormData({
@@ -98,7 +98,7 @@ const Profile: React.FC = () => {
       {loading && <Loader />}
       {showSuccess && (
         <SuccessModal
-          message="Updated Successfully"
+          message="Saved Successfully"
           onClose={() => setShowSuccess(false)}
         />
       )}
