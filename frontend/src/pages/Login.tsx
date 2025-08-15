@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login, setUser } from "../redux/reducers/authReducer";
+import { fetchMe, login, setUser } from "../redux/reducers/authReducer";
 import type { AppDispatch } from "../redux/store";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,6 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       await dispatch(login({ email, password })).unwrap();
-      // redirect or toast
     } catch (err) {
       console.error(err);
       alert("Login failed");
@@ -28,7 +27,6 @@ const Login: React.FC = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      // await dispatch(googleLogin()).unwrap();
       const popup = window.open(
         `${import.meta.env.VITE_API_URL}/api/auth/google`,
         "_blank",
@@ -36,15 +34,13 @@ const Login: React.FC = () => {
       );
 
       const messageListener = (event: MessageEvent) => {
-        // Make sure the message comes from your backend
         if (event.origin !== `${import.meta.env.VITE_API_URL}`) return;
 
         const { token, user } = event.data;
         if (token && user) {
-          // Store in Redux
           dispatch(setUser({ token }));
+          dispatch(fetchMe(token));
           navigate("/profile");
-          // Optionally store in localStorage for persistence
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
         }
@@ -52,14 +48,12 @@ const Login: React.FC = () => {
 
       window.addEventListener("message", messageListener);
 
-      // Clean up listener when popup closes
       const popupChecker = setInterval(() => {
         if (popup?.closed) {
           clearInterval(popupChecker);
           window.removeEventListener("message", messageListener);
         }
       }, 500);
-      // redirect or toast
     } catch (err) {
       console.error(err);
       alert("Google login failed");
@@ -75,7 +69,7 @@ const Login: React.FC = () => {
         alignItems: "center",
         minHeight: "100vh",
         width: "100vw",
-        background: "linear-gradient(to bottom right, #38bdf8, #1e3a8a)", // skyBlue to blue gradient
+        background: "linear-gradient(to bottom right, #38bdf8ff, #1e3a8a)",
       }}
     >
       <div

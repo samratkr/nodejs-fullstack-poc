@@ -3,16 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import type { RootState, AppDispatch } from "../redux/store";
 import { fetchMe, logout, updateUser } from "../redux/reducers/authReducer";
+import Loader from "../components/Loader";
+import SuccessModal from "../components/SuccessModal";
+import CustomModal from "../components/CustomModal";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/api`; // replace with your backend URL
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, token } = useSelector((state: RootState) => state.auth);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (token && !user) dispatch(fetchMe(token));
   }, [token, user, dispatch]);
+
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,8 +25,8 @@ const Profile: React.FC = () => {
     email: user?.email || "",
     age: user?.age || "",
   });
-
-  if (!user) return <p>Loading...</p>;
+  console.log("UserSre", user);
+  if (!user) return <Loader />;
 
   const handleEditClick = () => {
     setFormData({
@@ -37,15 +42,15 @@ const Profile: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    setLoading(true);
     try {
       const resultAction = await dispatch(
         updateUser({ id: user?._id ? user?._id : user?.id, payload: formData })
       );
 
       if (updateUser.fulfilled.match(resultAction)) {
-        console.log("Updated user:", resultAction.payload); // ✅ payload contains updated user
         setIsEditing(false);
-        // Optionally update Redux store here if needed
+        setShowSuccess(true);
       } else {
         console.error(
           "Update failed:",
@@ -54,20 +59,25 @@ const Profile: React.FC = () => {
       }
     } catch (err) {
       console.error("Unexpected error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete your account?"))
-      return;
+  const [deleteModal, setDeleteModal] = useState(false);
 
+  const handleDelete = async () => {
+    setLoading(true);
     try {
       await axios.delete(`${API_URL}/${user._id ? user?._id : user?.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      setShowSuccess(true);
       dispatch(logout());
     } catch (err: any) {
       console.error("Delete failed:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,6 +95,23 @@ const Profile: React.FC = () => {
         padding: "20px",
       }}
     >
+      {loading && <Loader />}
+      {showSuccess && (
+        <SuccessModal
+          message="Updated Successfully"
+          onClose={() => setShowSuccess(false)}
+        />
+      )}
+      {deleteModal && (
+        <CustomModal
+          message="Do you want to Delete Account?"
+          onClose={() => setDeleteModal(false)}
+          onOkay={() => {
+            setDeleteModal(false);
+            handleDelete();
+          }}
+        />
+      )}
       <div
         style={{
           backgroundColor: "#fff",
@@ -97,7 +124,6 @@ const Profile: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        {/* Top Edit / Update */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           {!isEditing ? (
             <button
@@ -172,7 +198,7 @@ const Profile: React.FC = () => {
                   fontWeight: 500,
                   cursor: "pointer",
                 }}
-                onClick={handleDelete}
+                onClick={() => setDeleteModal(true)}
               >
                 Delete Account
               </button>

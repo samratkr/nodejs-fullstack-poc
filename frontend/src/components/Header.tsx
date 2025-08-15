@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState, AppDispatch } from "../redux/store";
 import { logout } from "../redux/reducers/authReducer";
+import CustomModal from "./CustomModal";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
+  const [logoutModal, setLogoutModal] = useState(false);
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+  };
 
   return (
     <div
@@ -21,14 +27,11 @@ const Header: React.FC = () => {
         fontFamily: "system-ui, sans-serif",
       }}
     >
-      {/* Left: Hello User */}
       <div style={{ fontSize: "1.2em", fontWeight: "500" }}>
         Hello, {user?.name || "User"}
       </div>
 
-      {/* Right: Avatar + Buttons */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        {/* Profile Avatar */}
         <div
           onClick={() => navigate("/profile")}
           style={{
@@ -48,7 +51,16 @@ const Header: React.FC = () => {
           {user?.name?.charAt(0) || "U"}
         </div>
 
-        {/* Logout Button */}
+        {logoutModal && (
+          <CustomModal
+            message="Do you want to Logout?"
+            onClose={() => setLogoutModal(false)}
+            onOkay={() => {
+              setLogoutModal(false);
+              handleLogout();
+            }}
+          />
+        )}
         <button
           style={{
             padding: "8px 16px",
@@ -59,7 +71,7 @@ const Header: React.FC = () => {
             fontWeight: 500,
             cursor: "pointer",
           }}
-          onClick={() => dispatch(logout())}
+          onClick={() => setLogoutModal(true)}
         >
           Logout
         </button>

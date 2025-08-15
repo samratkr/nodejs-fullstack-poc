@@ -1,16 +1,14 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt, { compareSync } from "bcryptjs";
 import User from "../models/User";
 
-// Helper to generate JWT
 const generateToken = (userId: string) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET as string, {
     expiresIn: "7d",
   });
 };
 
-// @desc Register user (email/password)
 export const register = async (req: Request, res: Response) => {
 
   try {
@@ -35,7 +33,6 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-// @desc Login user (email/password)
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -49,14 +46,13 @@ export const login = async (req: Request, res: Response) => {
     res.json({
       message: "Login successful",
       token: generateToken(user.id),
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, age: user.age },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
 
-// @desc Google Sign-In (passport handles creating user)
 export const googleAuthCallback = (req: Request, res: Response) => {
   const user = req.user as any;
   const token = generateToken(user.id);
@@ -64,11 +60,10 @@ export const googleAuthCallback = (req: Request, res: Response) => {
   res.json({
     message: "Google Sign-In successful",
     token,
-    user: { id: user.id, name: user.name, email: user.email },
+    user: { id: user.id, name: user.name, email: user.email, age: user.age },
   });
 };
 
-// @desc Get logged-in user
 export const getMe = async (req: Request, res: Response) => {
   if (!req.user) {
     return res.status(404).json({ message: "User not found" });
