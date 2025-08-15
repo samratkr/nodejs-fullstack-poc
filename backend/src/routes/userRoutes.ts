@@ -50,13 +50,21 @@ router.get(
     // Send token to popup's opener window
     res.send(`
   <script>
-    const userData = {
-      token: ${JSON.stringify(token)},
-      user: ${JSON.stringify({ id: user.id, name: user.name, email: user.email })}
-    };
+    (function() {
+      const userData = {
+        token: ${JSON.stringify(token)},
+        user: ${JSON.stringify({ id: user.id, name: user.name, email: user.email })}
+      };
 
-    window.opener.postMessage(userData, "${process.env.FRONTEND_URL}");
-    window.close();
+      // Make sure the opener exists
+      if (window.opener) {
+        window.opener.postMessage(userData, "${process.env.FRONTEND_URL}");
+        window.close(); // Close the popup after sending the message
+      } else {
+        // Fallback if popup is blocked or no opener
+        alert("Login successful! You can close this window.");
+      }
+    })();
   </script>
 `);
   }
